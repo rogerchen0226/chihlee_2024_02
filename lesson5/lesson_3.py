@@ -1,6 +1,4 @@
-while True:
-    kg=0  #清除變數
-    cm=0  #清除變數
+def input_data():
     while True:
         try:    
             cm = int(input("請輸入身高(公分):"))
@@ -18,7 +16,7 @@ while True:
         try:    
             kg = int(input("請輸入體重(公斤):"))
             if kg > 300:
-                raise Exception("超過300公分")
+                raise Exception("超過300公斤")
             break
         except ValueError:
             print('輸入格式錯誤')
@@ -26,6 +24,13 @@ while True:
         except Exception as e:
             print(f'輸入錯誤{kg}')
             continue
+    return (kg, cm)
+
+while True:
+    kg=0  #清除變數()
+    cm=0  #清除變數
+
+    cm,kg = input_data()
 
     print(f'身高={cm},體重={kg}')
     cm=(cm/100)*(cm/100)
