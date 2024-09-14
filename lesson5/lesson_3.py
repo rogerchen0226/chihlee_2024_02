@@ -24,13 +24,12 @@ def input_data():
         except Exception as e:
             print(f'輸入錯誤{kg}')
             continue
-    return (kg, cm)
+    return kg, cm #回傳tuple
 
-while True:
-    kg=0  #清除變數()
+while True: #主程式
+    kg=0  #清除變數
     cm=0  #清除變數
-
-    cm,kg = input_data()
+    cm,kg = input_data() #呼叫函數
 
     print(f'身高={cm},體重={kg}')
     cm=(cm/100)*(cm/100)
