@@ -1,8 +1,8 @@
-from machine import Timer,ADC,Pin,PWM
+from machine import Timer,ADC,Pin,PWM,RTC
 import time
 
 green_led = Pin("LED",Pin.OUT)
-
+rtc = RTC()
 pwm = PWM(Pin(15))
 pwm.freq(1000)
 
@@ -28,7 +28,8 @@ def do_thing1(t:Timer):
     # Typically, Vbe = 0.706V at 27 degrees C, with a slope of -1.721mV (0.001721) per degree. 
     temperature = 27 - (reading - 0.706)/0.001721
     print(temperature)
-    print(f"current time:",time.localtime())
+    year,month,day,weekly,hours,minutes,seconds,info = rtc.datetime()
+    print(f"{year}-{month}-{day} {hours}:{minutes}:{seconds}")
     
 def do_thing2(t:Timer):
     adc1 =ADC(Pin(26))
