@@ -23,8 +23,10 @@ def do_thing(t):
     reading = adc.read_u16() * conversion_factor
     temperature = 27 - (reading - 0.706)/0.001721  
     print(f'溫度:{temperature}')
+    mqtt.publish('SA-21/TEMP', f'{temperature}')
     adc_value = adc_light.read_u16()
     print(f'光線:{adc_value}')
+    mqtt.publish('SA-21/LIGHT', f'{adc_value}')
     
     
 def do_thing1(t):
@@ -37,12 +39,13 @@ def do_thing1(t):
     pwm.duty_u16(duty)
     light_level = round(duty/65535*10)
     print(f'可變電阻:{light_level}')
-    mqtt.publish('SA-21/LIGHT_LEVEL', f'{light_level}')
+    mqtt.publish('SA-21/LED_LEVEL', f'{light_level}')
     
 
 def main():
     try:
         tools.connect()
+        mqtt.connect()
     except RuntimeError as e:
         print(e)
     except Exception:
@@ -62,5 +65,4 @@ if __name__ == '__main__':
     SERVER = "192.168.0.252"
     CLIENT_ID = binascii.hexlify(machine.unique_id())
     mqtt = MQTTClient(CLIENT_ID, SERVER,user='pi',password='raspberry')
-    mqtt.connect()
     main()
