@@ -2,7 +2,12 @@ import paho.mqtt.client as mqtt
 from datetime import datetime
 import os,csv
 
-def record(r):
+def record(r:list):
+    '''
+    # 檢查是否有data資料夾,如果沒有就建立data資料夾
+    # 檢查是否有今天的檔案,如果沒有今天日期的.csv就建立今天日期的.csv,並寫入資料
+    # parameters r: list, [日期時間,設備的topic,值]
+    '''
     root_dir = os.getcwd()
     data_dir = os.path.join(root_dir, 'data')
     if not os.path.isdir(data_dir):    
@@ -44,7 +49,7 @@ def on_message(client, userdata, msg):
             record(save_str)
 
     if topic == "SA-21/TEMP":
-        temp_value = float(value)
+        temp_value = "{:.2f}".format(round(float(value),ndigits=2))
         if temp_value != temp_origin_value:
             temp_origin_value = temp_value
             print(f"temp_value '{temp_value}' ")
