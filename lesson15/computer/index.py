@@ -29,12 +29,10 @@ def record(date:str,topic:str,value:str):
         writer = csv.writer(file)
         writer.writerow([date,topic,value])
 
-
 def on_connect(client, userdata, flags, reason_code, properties):
     print("Connected with result code " + str(properties))
     #連線bloker成功時,只會執行一次
     client.subscribe("SA-21/#")
-
 
 def on_message(client, userdata, msg):
     global led_origin_value # 宣告全域變數
