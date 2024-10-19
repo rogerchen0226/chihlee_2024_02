@@ -21,9 +21,10 @@ def do_thing(t):
     '''
     conversion_factor = 3.3 / (65535)
     reading = adc.read_u16() * conversion_factor
-    temperature = 27 - (reading - 0.706)/0.001721  
-    print(f'溫度:{temperature}')
-    mqtt.publish('SA-21/TEMP', f'{temperature}')
+    temperature = round(27 - (reading - 0.706)/0.001721,2)
+    formatted_number = "{:.2f}".format(temperature)
+    print(f'溫度:{formatted_number}')
+    mqtt.publish('SA-21/TEMP', f'{formatted_number}')
     adc_value = adc_light.read_u16()
     print(f'光線:{adc_value}')
     mqtt.publish('SA-21/LIGHT', f'{adc_value}')
