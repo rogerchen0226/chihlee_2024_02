@@ -2,11 +2,13 @@ import paho.mqtt.client as mqtt
 from datetime import datetime
 import os,csv
 
-def record(r:list):
+def record(date:str,topic:str,value:str):
     '''
     # 檢查是否有data資料夾,如果沒有就建立data資料夾
     # 檢查是否有今天的檔案,如果沒有今天日期的.csv就建立今天日期的.csv,並寫入資料
-    # parameters r: list, [日期時間,設備的topic,值]
+    # parameters date:str -> 日期
+    #            topic:str -> 主題
+    #            value:str -> 值
     '''
     root_dir = os.getcwd()
     data_dir = os.path.join(root_dir, 'data')
@@ -25,7 +27,7 @@ def record(r:list):
     
     with open(full_path, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        writer.writerow(r)
+        writer.writerow([date,topic,value])
 
 
 def on_connect(client, userdata, flags, reason_code, properties):
@@ -45,8 +47,8 @@ def on_message(client, userdata, msg):
             print(f"led_value '{led_value}' ")
             today = datetime.today()
             now_str = today.strftime('%Y-%m-%d %H:%M:%S')
-            save_str = [now_str, topic,led_value]
-            record(save_str)
+            #save_str = [now_str, topic,led_value]
+            record(now_str,topic,led_value)
 
     if topic == "SA-21/TEMP":
         temp_value = "{:.2f}".format(round(float(value),ndigits=2))
@@ -55,8 +57,8 @@ def on_message(client, userdata, msg):
             print(f"temp_value '{temp_value}' ")
             today = datetime.today()
             now_str = today.strftime('%Y-%m-%d %H:%M:%S')
-            save_str = [now_str, topic,temp_value]
-            record(save_str)
+            #save_str = [now_str, topic,temp_value]
+            record(now_str,topic,temp_value)
 
     #print(f"Received message '{msg.payload.decode()}' on topic '{msg.topic}'")
 
