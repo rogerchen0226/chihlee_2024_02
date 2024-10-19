@@ -39,8 +39,11 @@ def on_connect(client, userdata, flags, reason_code, properties):
 def on_message(client, userdata, msg):
     global led_origin_value # 宣告全域變數
     global temp_origin_value # 宣告全域變數
+    global light_origin_value # 宣告全域變數
+
     topic = msg.topic
     value = msg.payload.decode()
+    #print(f"topic '{topic}' value '{value}' type '{type(value)}'")
     if topic == "SA-21/LED_LEVEL":
         led_value = int(value)
         if led_value != led_origin_value:
@@ -61,6 +64,16 @@ def on_message(client, userdata, msg):
             #save_str = [now_str, topic,temp_value]
             record(now_str,topic,temp_value)
 
+    if topic == "SA-21/LIGHT":
+        light_value = int(value)
+        if light_value != light_origin_value:
+            light_origin_value = light_value
+            print(f"light_value '{light_value}' ")
+            today = datetime.today()
+            now_str = today.strftime('%Y-%m-%d %H:%M:%S')
+            #save_str = [now_str, topic,temp_value]
+            record(now_str,topic,light_value)
+
     #print(f"Received message '{msg.payload.decode()}' on topic '{msg.topic}'")
 
 def main():
@@ -78,4 +91,5 @@ def main():
 if __name__ == "__main__":
     led_origin_value = 0
     temp_origin_value = 0.0
+    light_origin_value = 0
     main()

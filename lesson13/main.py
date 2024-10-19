@@ -26,22 +26,23 @@ def do_thing(t):
     print(f'溫度:{formatted_number}')
     mqtt.publish('SA-21/TEMP', f'{formatted_number}')
     adc_value = adc_light.read_u16()
-    print(f'光線:{adc_value}')
-    mqtt.publish('SA-21/LIGHT', f'{adc_value}')
+    #adc_value = (adc_value // 1000) * 1000 # 固定尾碼為000
+    line_state = 0 if adc_value < 10000 else 1
+    print(f'光線:{line_state}')
+    mqtt.publish('SA-21/LIGHT', f'{line_state}')
     
     
 def do_thing1(t):
     '''
     :param t:Timer的實體
     負責可變電阻和改變led的亮度
-    '''    
+    '''
     
     duty = adc1.read_u16()
     pwm.duty_u16(duty)
-    light_level = round(duty/65535*10)
-    print(f'可變電阻:{light_level}')
-    mqtt.publish('SA-21/LED_LEVEL', f'{light_level}')
-    
+    led_level = round(duty/65535*10)
+    print(f'可變電阻:{led_level}')
+    mqtt.publish('SA-21/LED_LEVEL', f'{led_level}')
 
 def main():
     try:
