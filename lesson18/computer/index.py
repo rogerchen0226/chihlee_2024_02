@@ -1,7 +1,26 @@
 import paho.mqtt.client as mqtt
 from datetime import datetime
 import os,csv
+import sqlite3
+from sqlite3 import Error
 
+def insert_to_sqlite(values):
+    try:
+        conn = sqlite3.connect('./data/pico.db')
+        print(conn)
+        print(sqlite3.version)
+    except Error as e:
+        return
+    sql = """
+        INSERT INTO 雞舍 (時間,設備,值)
+        VALUES (?,?,?);
+    """
+    cursor = conn.cursor()
+    print(values)
+    cursor.execute(sql,(values))
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 def record(date:str,topic:str,value:str):
     '''
@@ -29,6 +48,7 @@ def record(date:str,topic:str,value:str):
     with open(full_path, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow([date,topic,value])
+        insert_to_sqlite([date,topic,float(value)])
 
 
 def on_connect(client, userdata, flags, reason_code, properties):
