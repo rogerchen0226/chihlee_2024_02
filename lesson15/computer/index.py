@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 from datetime import datetime
 import os,csv
 
+
 def record(date:str,topic:str,value:str):
     '''
     # 檢查是否有data資料夾,如果沒有就建立data資料夾
